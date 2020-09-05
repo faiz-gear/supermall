@@ -18,7 +18,7 @@
 		position: fixed;
 		left: 0;
 		right: 0;
-		bottom: 0;
+		bottom: -5px;
 		box-shadow: 0px -5px 10px rgba(10,10,10,0.2);
 	}
 
