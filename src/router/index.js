@@ -9,6 +9,7 @@ const Detail = () => import('../views/detail/Detail')
 
 Vue.use(VueRouter)
 
+
 const routes = [
 	{
 		path:'',

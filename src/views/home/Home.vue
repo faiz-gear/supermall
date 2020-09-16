@@ -39,6 +39,7 @@
 
 	import {getHomeMultidata,getHomeGoods} from "network/home";
 	import {debounce} from "common/utils";
+	import {itemListenerMixin} from "common/mixin";
 
 
 	export default {
@@ -65,9 +66,13 @@
 				isShowBackTop:false,
 				tabOffsetTop:0,
 				isTabFixed:false,
-				saveY:0
+				saveY:0,
+
 			}
 		},
+		mixins:[
+				itemListenerMixin
+		],
 		computed:{
 			showGoods(){
 				return this.goods[this.currentType].list
@@ -84,12 +89,6 @@
 		},
 		mounted() {
 			//3.监听item中图片加载完成,同时刷新BScroll的滚动高度
-			const refresh = debounce(this.$refs.scroll.refresh,200)
-			this.$bus.$on('itemimgload',() => {
-				// console.log('---');
-				refresh()
-			})
-
 
 		},
 		methods:{
@@ -162,9 +161,13 @@
 			// console.log('actived');
 		},
 		deactivated() {
+			//1.保存y值
 			this.saveY = this.$refs.scroll.getScrollY()
 			// console.log(this.saveY);
 			// console.log('deactived');
+
+			//2.取消全局事件的监听
+			this.$bus.$off('itemImgLoad',this.itemImgListener)
 		}
 	}
 </script>
