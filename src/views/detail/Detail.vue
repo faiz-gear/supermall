@@ -12,6 +12,7 @@
 		</scroll>
 		<detail-bottom-nav @addToCart="addToCart"></detail-bottom-nav>
 		<back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+		<toast :message="message" :toastShow="toastShow"/>
 	</div>
 </template>
 
@@ -28,6 +29,7 @@
 	import Scroll from "components/common/scroll/Scroll";
 	import GoodsList from "components/content/goods/GoodsList";
 	import BackTop from "components/content/backtop/BackTop";
+	import Toast from "../../components/common/toast/Toast";
 
 	import {getDetail,Goods,Shop,GoodsParam,getRecommend} from "network/detail";
 
@@ -47,7 +49,8 @@
 			DetailBottomNav,
 			Scroll,
 			GoodsList,
-			BackTop
+			BackTop,
+			Toast
 		},
 		mixins:[
 				itemListenerMixin
@@ -65,7 +68,9 @@
 				navBarClickY:[],
 				getNavBarY:null,
 				currentIndex:0,
-				isShowBackTop:false
+				isShowBackTop:false,
+				message:'',
+				toastShow:false
 			}
 		},
 		created() {
@@ -156,6 +161,7 @@
 				this.$refs.scroll.scrollTo(0,0,200)
 			},
 			addToCart(){
+				//1.获取购物车需要展示的信息
 				const item = {};
 				item.image = this.topImages[0];
 				item.title = this.goods.title;
@@ -163,7 +169,16 @@
 				item.price = this.goods.realPrice;
 				item.iid = this.iid
 				// console.log(item);
-				this.$store.dispatch('addCart',item)
+				//2.将商品添加到购物车里
+				this.$store.dispatch('addCart',item).then(res => {
+					// console.log(res);
+					// this.toastShow = true;
+					// this.message = res;
+					// setTimeout(() => {
+					// 	this.toastShow = false
+					// },2000)
+					this.$toast.toastShow(res,3000)
+				})
 			}
 		}
 	}
